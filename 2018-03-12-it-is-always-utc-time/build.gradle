@@ -1,0 +1,39 @@
+ext {
+	junitJupiterVersion		= '5.1.0'
+	log4jVersion				= '2.9.0'
+}
+
+dependencies {
+	compile "com.google.inject:guice:4.2.0"
+	compile "com.google.inject.extensions:guice-persist:4.2.0"
+
+	compile "org.hibernate:hibernate-core:5.3.0.CR1"
+	compile "org.hibernate:hibernate-entitymanager:5.3.0.CR1"
+	compile "org.hibernate:hibernate-c3p0:5.3.0.CR1"
+	compile "org.hsqldb:hsqldb:2.4.0"
+	
+	testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+	testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+	// To use Log4J's LogManager
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}
+
+junitPlatform {
+	// platformVersion '1.1.0'
+	filters {
+		engines {
+			// include 'junit-jupiter', 'junit-vintage'
+			// exclude 'custom-engine'
+		}
+		tags {
+			// include 'fast'
+			exclude 'slow'
+		}
+		// includeClassNamePattern '.*Test'
+	}
+	// configurationParameter 'junit.jupiter.conditions.deactivate', '*'
+	// enableStandardTestTask true
+	// reportsDir file('build/test-results/junit-platform') // this is the default
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}

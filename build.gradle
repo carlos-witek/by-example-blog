@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0'
+    }
+}
+
+allprojects {
+    apply plugin: 'eclipse'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.junit.platform.gradle.plugin'
+
+    // following lines are needed to correctly import gradle projects to eclipse
+    // this ensures eclipse project names are unique
+    eclipse.project.name = "${rootProject.name}.${project.name}"
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task testsJar(type: Jar) {
+        classifier = 'tests'
+        from sourceSets.test.output
+    }
+
+    task testsSourcesJar(type: Jar) {
+        classifier = 'tests-sources'
+        from sourceSets.test.allSource
+    }
+
+    configurations {
+        testsArtifact
+    }
+
+    artifacts {
+        testsArtifact testsJar
+    }
+
+    // Compile with -parameters to retain parameter names.
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+        options.compilerArgs += '-parameters'
+    }
+}
