@@ -8,6 +8,7 @@
 		<properties>
 			<!-- connection -->
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:it-is-always-utc-time;sql.syntax_mys=true;shutdown=true;hsqldb.sqllog=3" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:it-is-always-utc-time;sql.syntax_mys=true;shutdown=true" />
 			<property name="javax.persistence.jdbc.user" value="sa" />
 			<property name="javax.persistence.jdbc.password" value="" />

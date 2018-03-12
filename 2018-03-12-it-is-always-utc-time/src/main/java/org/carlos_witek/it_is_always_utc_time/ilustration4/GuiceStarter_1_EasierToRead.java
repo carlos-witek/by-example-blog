@@ -9,7 +9,11 @@ import org.carlos_witek.it_is_always_utc_time.ilustration4.dao.example2.Example2
 
 import com.google.inject.Injector;
 
-public class DoNotBeAfraidToUseItWithJPA extends StarterGuice {
+public class GuiceStarter_1_EasierToRead extends GuiceStarter {
+
+	public static void main( String[] args ) {
+		new GuiceStarter_1_EasierToRead().execute();
+	}
 
 	@Override
 	void execute( final Injector injector ) {
