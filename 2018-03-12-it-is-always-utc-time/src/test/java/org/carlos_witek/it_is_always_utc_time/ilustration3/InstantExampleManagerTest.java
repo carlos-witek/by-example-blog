@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 
 import org.carlos_witek.it_is_always_utc_time.ilustration3.attempt1.DateExampleManager;
 import org.carlos_witek.it_is_always_utc_time.ilustration3.attempt3.InstantExampleManager;
@@ -53,11 +52,11 @@ public class InstantExampleManagerTest {
 	@Test
 	public void test_returningUser_afterFewMinutes() throws Exception {
 		//Given
-		//		final AdjustableClock clock = new AdjustableClock();
-		ExampleManager dateExampleManager = new InstantExampleManager();
+		final AdjustableClock clock = new AdjustableClock();
+		ExampleManager dateExampleManager = new InstantExampleManager( clock );
 
 		dateExampleManager.getLastSeenMessage( 1L );
-//		clock.setNextInstant( Instant.now().plus( 1, ChronoUnit.MINUTES ) );
+		// clock.setNextInstant( Instant.now().plus( 1, ChronoUnit.MINUTES ) );
 
 		//When
 		String lastSeenMessage = dateExampleManager.getLastSeenMessage( 1L );
@@ -69,7 +68,8 @@ public class InstantExampleManagerTest {
 	@Test
 	public void test_returningUser_afterADay() throws Exception {
 		//Given
-		ExampleManager dateExampleManager = new InstantExampleManager();
+		final AdjustableClock clock = new AdjustableClock();
+		ExampleManager dateExampleManager = new InstantExampleManager( clock );
 
 		//When
 		String lastSeenMessage = dateExampleManager.getLastSeenMessage( 1L );
@@ -81,7 +81,8 @@ public class InstantExampleManagerTest {
 	@Test
 	public void test_returningUser_afterAWeek() throws Exception {
 		//Given
-		ExampleManager dateExampleManager = new InstantExampleManager();
+		final AdjustableClock clock = new AdjustableClock();
+		ExampleManager dateExampleManager = new InstantExampleManager( clock );
 
 		//When
 		String lastSeenMessage = dateExampleManager.getLastSeenMessage( 1L );
