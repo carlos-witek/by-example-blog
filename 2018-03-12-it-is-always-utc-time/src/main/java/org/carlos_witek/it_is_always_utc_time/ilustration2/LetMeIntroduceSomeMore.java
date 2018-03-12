@@ -1,15 +1,10 @@
 package org.carlos_witek.it_is_always_utc_time.ilustration2;
 
-import java.time.Clock;
-import java.time.Instant;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.Period;
 import java.util.TimeZone;
 
 public class LetMeIntroduceSomeMore {
@@ -29,33 +24,35 @@ public class LetMeIntroduceSomeMore {
 	private static void print( final long currentTimeMillis ) {
 		System.out.println( TimeZone.getDefault().getID() );
 
-		final Date date = new Date( currentTimeMillis );
-		System.out.println( date );
+		// time based
+		final LocalDateTime startDateTime = LocalDate.of( 2018, 01, 01 )
+				.atTime( LocalTime.of( 00, 00, 00 ) );
+		final LocalDateTime finishDateTime = LocalDate.of( 2018, 02, 02 )
+				.atTime( LocalTime.of( 01, 02, 03 ) );
+
+		final Duration duration = Duration.between( startDateTime, finishDateTime );
+		System.out.println( duration );
+		System.out.println( toString( duration ) );
+
 		System.out.println();
 
-		final Instant instant = Instant.ofEpochMilli( currentTimeMillis );
-		System.out.println( instant );
+		// date based
+		final LocalDate startDate = LocalDate.of( 2016, 01, 01 );
+		final LocalDate finishDate = LocalDate.of( 2018, 02, 02 );
+
+		Period period = Period.between( startDate, finishDate );
+		System.out.println( period );
+
 		System.out.println();
 
-		final Clock clock = Clock.fixed( instant, ZoneId.systemDefault() );
-
-		final LocalDate localDate = LocalDate.now( clock );
-		System.out.println( localDate );
-		final LocalTime localTime = LocalTime.now( clock );
-		System.out.println( localTime );
-		final LocalDateTime localDateTime = LocalDateTime.now( clock );
-		System.out.println( localDateTime );
-		System.out.println();
-
-		final OffsetTime offsetTime = OffsetTime.now( clock );
-		System.out.println( offsetTime );
-		final OffsetDateTime offsetDateTime = OffsetDateTime.now( clock );
-		System.out.println( offsetDateTime );
-		final ZonedDateTime zonedDateTime = ZonedDateTime.now( clock );
-		System.out.println( zonedDateTime );
-		System.out.println();
 		System.out.println( "-------------------------------" );
 		System.out.println();
+	}
+
+	private static String toString( Duration duration ) {
+		final long minutes = duration.toMinutes();
+		final long hours = duration.toHours();
+		return String.format( "%dD %dH %dM", duration.toDays(), hours % 24, minutes % 60 );
 	}
 
 }
