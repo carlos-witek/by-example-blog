@@ -19,7 +19,7 @@ public class DateExampleManager implements ExampleManager {
 				final Date lastSeenDate = lastSeenDates.get( userId );
 				final long duration = currentDate.getTime() - lastSeenDate.getTime();
 
-				long days = TimeUnit.MILLISECONDS.toDays( duration );
+				final long days = TimeUnit.MILLISECONDS.toDays( duration );
 				if ( 14 < days ) {
 					return ExampleManager.LAST_SEEN_LONG_TIME_AGO;
 				} else if ( 7 < days && days <= 14 ) {

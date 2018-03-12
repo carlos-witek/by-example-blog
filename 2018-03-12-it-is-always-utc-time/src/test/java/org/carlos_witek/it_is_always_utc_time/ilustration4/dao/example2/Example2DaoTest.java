@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.Clock;
 import java.time.Instant;
 
-import org.carlos_witek.it_is_always_utc_time.AdjustableClock;
+import org.carlos_witek.it_is_always_utc_time.TickTackClock;
 import org.carlos_witek.it_is_always_utc_time.ilustration4.dao.ExampleDao;
 import org.carlos_witek.it_is_always_utc_time.ilustration4.dao.ExampleEntity;
 import org.junit.jupiter.api.AfterEach;
@@ -31,9 +31,10 @@ public class Example2DaoTest {
 			protected void configure() {
 				super.configure();
 				bind( Example2Dao.class );
-				final AdjustableClock adjustableClock = new AdjustableClock();
-				bind( Clock.class ).toInstance( adjustableClock );
-				bind( AdjustableClock.class ).toInstance( adjustableClock );
+
+				final TickTackClock clock = new TickTackClock();
+				bind( Clock.class ).toInstance( clock );
+				bind( TickTackClock.class ).toInstance( clock );
 			}
 		};
 
@@ -48,11 +49,11 @@ public class Example2DaoTest {
 
 	@Test
 	void create() {
-		final AdjustableClock adjustableClock = injector.getInstance( AdjustableClock.class );
+		final TickTackClock clock = injector.getInstance( TickTackClock.class );
 		final ExampleDao exampleDao = injector.getInstance( Example2Dao.class );
 
 		// GIVEN
-		adjustableClock.setNextInstant( Instant.ofEpochMilli( 1 ) );
+		clock.tick( Instant.ofEpochMilli( 1 ) );
 
 		final Long exampleId = exampleDao.createExample( "value1" );
 
@@ -66,13 +67,13 @@ public class Example2DaoTest {
 
 	@Test
 	void update() {
-		final AdjustableClock adjustableClock = injector.getInstance( AdjustableClock.class );
+		final TickTackClock clock = injector.getInstance( TickTackClock.class );
 		final ExampleDao exampleDao = injector.getInstance( Example2Dao.class );
 
 		// GIVEN
-		adjustableClock.setNextInstant( Instant.ofEpochMilli( 1 ) );
+		clock.tick( Instant.ofEpochMilli( 1 ) );
 		final Long exampleId = exampleDao.createExample( "value1" );
-		adjustableClock.setNextInstant( Instant.ofEpochMilli( 2 ) );
+		clock.tick( Instant.ofEpochMilli( 2 ) );
 		exampleDao.updateExample( exampleId, "value2" );
 
 		// THEN

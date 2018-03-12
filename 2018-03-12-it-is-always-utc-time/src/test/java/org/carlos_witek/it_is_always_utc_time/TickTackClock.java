@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public final class AdjustableClock extends Clock {
+public final class TickTackClock extends Clock {
 
 	private Instant instant;
 
@@ -20,10 +20,10 @@ public final class AdjustableClock extends Clock {
 
 	@Override
 	public Instant instant() {
-		return instant == null ? Clock.system( getZone() ).instant() : instant;
+		return instant;
 	}
 
-	public void setNextInstant( Instant instant ) {
+	public void tick( final Instant instant ) {
 		this.instant = instant;
 	}
 }

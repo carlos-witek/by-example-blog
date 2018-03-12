@@ -6,19 +6,21 @@ import java.util.concurrent.TimeUnit;
 
 import org.carlos_witek.it_is_always_utc_time.ilustration3.ExampleManager;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public class MillisExampleManager implements ExampleManager {
 
 	private Map<Long, Long> lastSeenMillisMap = new HashMap<>();
 
 	@Override
 	public String getLastSeenMessage( final Long userId ) {
-		final long currentMillis = System.currentTimeMillis();
+		final long currentMillis = currentTimeMillis();
 		try {
 			if ( lastSeenMillisMap.containsKey( userId ) ) {
 				final Long lastSeenMillis = lastSeenMillisMap.get( userId );
 				final long duration = currentMillis - lastSeenMillis;
 
-				long days = TimeUnit.MILLISECONDS.toDays( duration );
+				final long days = TimeUnit.MILLISECONDS.toDays( duration );
 				if ( 14 < days ) {
 					return ExampleManager.LAST_SEEN_LONG_TIME_AGO;
 				} else if ( 7 < days && days <= 14 ) {
@@ -33,6 +35,11 @@ public class MillisExampleManager implements ExampleManager {
 		} finally {
 			lastSeenMillisMap.put( userId, currentMillis );
 		}
+	}
+
+	@VisibleForTesting
+	long currentTimeMillis() {
+		return System.currentTimeMillis();
 	}
 
 }

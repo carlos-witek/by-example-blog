@@ -1,5 +1,7 @@
 package org.carlos_witek.it_is_always_utc_time.ilustration1;
 
+import static java.lang.String.format;
+
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,35 +29,33 @@ public class LetMeIntroduce {
 	}
 
 	private static void print( final long currentTimeMillis ) {
+		System.out.println(
+				"----------------------------------------------------------------------" );
 		System.out.println( TimeZone.getDefault().getID() );
+		System.out.println(
+				"----------------------------------------------------------------------" );
 
-		final Date date = new Date( currentTimeMillis );
-		System.out.println( date );
-		System.out.println();
+		final Clock clock = Clock.fixed( Instant.ofEpochMilli( currentTimeMillis ),
+				ZoneId.systemDefault() );
 
-		final Instant instant = Instant.ofEpochMilli( currentTimeMillis );
-		System.out.println( instant );
-		System.out.println();
+		printValue(currentTimeMillis);
+		printValue( new Date( currentTimeMillis ) );
+		printValue( Instant.ofEpochMilli( currentTimeMillis ) );
+		printValue( LocalDate.now( clock ) );
+		printValue( LocalTime.now( clock ) );
+		printValue( LocalDateTime.now( clock ) );
+		printValue( OffsetTime.now( clock ) );
+		printValue( OffsetDateTime.now( clock ) );
+		printValue( ZonedDateTime.now( clock ) );
 
-		final Clock clock = Clock.fixed( instant, ZoneId.systemDefault() );
+		System.out.println(
+				"----------------------------------------------------------------------" );
+		System.out.println();
+	}
 
-		final LocalDate localDate = LocalDate.now( clock );
-		System.out.println( localDate );
-		final LocalTime localTime = LocalTime.now( clock );
-		System.out.println( localTime );
-		final LocalDateTime localDateTime = LocalDateTime.now( clock );
-		System.out.println( localDateTime );
-		System.out.println();
-
-		final OffsetTime offsetTime = OffsetTime.now( clock );
-		System.out.println( offsetTime );
-		final OffsetDateTime offsetDateTime = OffsetDateTime.now( clock );
-		System.out.println( offsetDateTime );
-		final ZonedDateTime zonedDateTime = ZonedDateTime.now( clock );
-		System.out.println( zonedDateTime );
-		System.out.println();
-		System.out.println( "-------------------------------" );
-		System.out.println();
+	static void printValue( final Object value ) {
+		System.out.println(
+				format( "%1$-20s : %2$s", value.getClass().getSimpleName(), value.toString() ) );
 	}
 
 }
