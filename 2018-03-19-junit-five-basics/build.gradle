@@ -1,0 +1,33 @@
+ext {
+	junitJupiterVersion		= '5.1.0'
+	log4jVersion				= '2.9.0'
+}
+
+dependencies {
+	testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+	testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+	testRuntime "org.junit.platform:junit-platform-launcher:1.1.0"
+
+	// To use Log4J's LogManager
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+}
+
+junitPlatform {
+	// platformVersion '1.1.0'
+	filters {
+		engines {
+			// include 'junit-jupiter', 'junit-vintage'
+			// exclude 'custom-engine'
+		}
+		tags {
+			// include 'fast'
+			exclude 'slow'
+		}
+		// includeClassNamePattern '.*Test'
+	}
+	// configurationParameter 'junit.jupiter.conditions.deactivate', '*'
+	// enableStandardTestTask true
+	// reportsDir file('build/test-results/junit-platform') // this is the default
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}

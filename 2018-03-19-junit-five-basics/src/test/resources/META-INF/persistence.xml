@@ -4,9 +4,9 @@
 
 	<persistence-unit name="it-is-always-utc-time">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<class>org.carlos_witek.it_is_always_utc_time.illustration4.dao.example1.Example1Entity</class>
-		<class>org.carlos_witek.it_is_always_utc_time.illustration4.dao.example2.Example2Entity</class>
-		<class>org.carlos_witek.it_is_always_utc_time.illustration4.dao.example3.Example3Entity</class>
+		<class>org.carlos_witek.it_is_always_utc_time.ilustration4.dao.example1.Example1Entity</class>
+		<class>org.carlos_witek.it_is_always_utc_time.ilustration4.dao.example2.Example2Entity</class>
+		<class>org.carlos_witek.it_is_always_utc_time.ilustration4.dao.example3.Example3Entity</class>
 
 		<properties>
 			<!-- connection -->
