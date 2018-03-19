@@ -1,95 +1,84 @@
 package org.carlos_witek.junit_five_basics;
 
-import org.carlos_witek.junit_five_basics.internal.Pair;
-import org.carlos_witek.junit_five_basics.internal.Person;
+import java.time.Duration;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class Illustration03AssertsTest {
 
+	public static class ExampleManager {
+		public String toLowerCase( final String string ) {
+			if ( string == null )
+				throw new NullPointerException( "string is empty" );
+			return string.toLowerCase();
+		}
+	}
+
 	@Test
 	void test01() {
 		System.out.println( "test01" );
 
-		Assertions.assertEquals( 1, 1 );
-		Assertions.assertEquals( 1, 1, "comment" );
-		Assertions.assertEquals( 1, 1, () -> "comment" );
-		Assertions.assertEquals( 1, 2, () -> "comment" );
+		final ExampleManager manager = new ExampleManager();
+
+		Throwable exception = Assertions.assertThrows( NullPointerException.class, () -> {
+			manager.toLowerCase( null );
+		} );
+		Assertions.assertEquals( "string is empty", exception.getMessage() );
 	}
 
 	@Test
 	void test02() {
 		System.out.println( "test02" );
 
-		{
-			Person expected = new Person( 1, "Adam", "Black" );
-			Person actual = new Person( 1, "Adam", "Black" );
+		// The following assertion succeeds.
+		final String string = Assertions.assertTimeout( Duration.ofMillis( 300 ), () -> {
+			Thread.sleep( 200 );
+			return "assertTimeout";
+		} );
 
-			Assertions.assertAll( "person",
-					() -> Assertions.assertEquals( expected.getId(), actual.getId() ),
-					() -> Assertions.assertEquals( expected.getFirstName(), actual.getFirstName() ),
-					() -> Assertions.assertEquals( expected.getLastName(), actual.getLastName() ) );
-		}
-
-		{
-			Person expected = new Person( 1, "Adam", "Black" );
-			Person actual = new Person( 1, "Adam", "Smith" );
-
-			Assertions.assertAll( "person",
-					() -> Assertions.assertEquals( expected.getId(), actual.getId() ),
-					() -> Assertions.assertEquals( expected.getFirstName(), actual.getFirstName() ),
-					() -> Assertions.assertEquals( expected.getLastName(), actual.getLastName() ) );
-		}
+		Assertions.assertEquals( "assertTimeout", string );
 	}
 
 	@Test
 	void test03() {
 		System.out.println( "test03" );
 
-		{
-			Pair actual = new Pair( new Person( 1, "Adam", "Black" ),
-					new Person( 1, "Adam", "Black" ) );
+		// The following assertion succeeds.
+		final String string = Assertions.assertTimeout( Duration.ofMillis( 100 ), () -> {
+			Thread.sleep( 200 );
+			return "assertTimeout";
+		} );
 
-			Assertions.assertAll( "pair", () -> {
-				Assertions.assertNotNull( actual.getPerson1() );
+		Assertions.assertEquals( "assertTimeout", string );
+	}
 
-				// Executed only if the previous assertion is valid.
-				Assertions.assertAll( "person",
-						() -> Assertions.assertEquals( "Adam", actual.getPerson1().getFirstName() ),
-						() -> Assertions.assertEquals( "Black",
-								actual.getPerson1().getLastName() ) );
-			}, () -> {
-				Assertions.assertNotNull( actual.getPerson2() );
+	@Test
+	void test04() {
+		System.out.println( "test04" );
 
-				// Executed only if the previous assertion is valid.
-				Assertions.assertAll( "person",
-						() -> Assertions.assertEquals( "Adam", actual.getPerson2().getFirstName() ),
-						() -> Assertions.assertEquals( "Black",
-								actual.getPerson2().getLastName() ) );
-			} );
-		}
+		// The following assertion succeeds.
+		final String string = Assertions.assertTimeoutPreemptively( Duration.ofMillis( 300 ),
+				() -> {
+					Thread.sleep( 200 );
+					return "assertTimeoutPreemptively";
+				} );
 
-		{
-			Pair actual = new Pair( new Person( 1, "Adam", "Black" ), null );
+		Assertions.assertEquals( "assertTimeoutPreemptively", string );
+	}
 
-			Assertions.assertAll( "pair", () -> {
-				Assertions.assertNotNull( actual.getPerson1() );
+	@Test
+	void test05() {
+		System.out.println( "test05" );
 
-				// Executed only if the previous assertion is valid.
-				Assertions.assertAll( "person",
-						() -> Assertions.assertEquals( "Adam", actual.getPerson1().getFirstName() ),
-						() -> Assertions.assertEquals( "Black",
-								actual.getPerson1().getLastName() ) );
-			}, () -> {
-				Assertions.assertNotNull( actual.getPerson2() );
+		// The following assertion succeeds.
+		final String string = Assertions.assertTimeoutPreemptively( Duration.ofMillis( 100 ),
+				() -> {
+					Thread.sleep( 200 );
+					return "assertTimeoutPreemptively";
+				} );
 
-				// Executed only if the previous assertion is valid.
-				Assertions.assertAll( "person",
-						() -> Assertions.assertEquals( "Adam", actual.getPerson2().getFirstName() ),
-						() -> Assertions.assertEquals( "Black",
-								actual.getPerson2().getLastName() ) );
-			} );
-		}
+		Assertions.assertEquals( "assertTimeoutPreemptively", string );
 	}
 
 }

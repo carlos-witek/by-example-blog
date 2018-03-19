@@ -1,11 +1,10 @@
 package org.carlos_witek.junit_five_basics;
 
-import org.carlos_witek.junit_five_basics.internal.Person;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
-public class Illustration05MatchersTest {
+public class Illustration04MatchersTest {
 
 	@Test
 	void test01() {
