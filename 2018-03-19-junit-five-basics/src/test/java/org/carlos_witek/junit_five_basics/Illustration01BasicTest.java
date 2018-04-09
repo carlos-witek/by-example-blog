@@ -70,6 +70,12 @@ public class Illustration01BasicTest {
 		System.out.println( "test06:" + string );
 	}
 
+	@ParameterizedTest
+	@MethodSource("test06_2")
+	void test06b( final String string ) {
+		System.out.println( "test06:" + string );
+	}
+
 	static Stream<String> test06() {
 		return Stream.of( "string-a", "string-b", "string-c" );
 	}
@@ -80,8 +86,14 @@ public class Illustration01BasicTest {
 
 	@ParameterizedTest
 	@CsvFileSource(resources = "/org/carlos_witek/junit_five_basics/test07.csv", numLinesToSkip = 1)
-	void test07( final String string ) {
-		System.out.println( "test07:" + string );
+	void test07a( final String string ) {
+		System.out.println( "test07a:" + string );
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = "/org/carlos_witek/junit_five_basics/test07.csv", numLinesToSkip = 1)
+	void test07b( final String string, final int value ) {
+		System.out.println( "test07b:" + string + " " + value );
 	}
 
 	/**
