@@ -1,6 +1,7 @@
 include ':2018-03-12-it-is-always-utc-time',
 		':2018-03-19-junit-five-basics',
 		':2018-04-09-back-to-the-future',
-		':2018-04-23-back-to-the-future-ii'
+		':2018-04-23-back-to-the-future-ii',
+		':2018-04-30-back-to-the-future-iii'
 
 rootProject.name = 'by-example-blog'
