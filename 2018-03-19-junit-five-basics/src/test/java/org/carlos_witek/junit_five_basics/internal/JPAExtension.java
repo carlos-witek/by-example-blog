@@ -17,68 +17,90 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.mockito.Mock;
 
-/**
- * {@code MockitoExtension} showcases the {@link TestInstancePostProcessor} and
- * {@link ParameterResolver} extension APIs of JUnit 5 by providing dependency
- * injection support at the field level and at the method parameter level via
- * Mockito 2.x's {@link Mock @Mock} annotation.
- *
- * @since 5.0
- */
-public class JPAExtension implements ParameterResolver, AfterTestExecutionCallback {
+public class JPAExtension
+		implements BeforeAllCallback, AfterAllCallback, ParameterResolver, AfterEachCallback {
 
 	@Override
-	public boolean supportsParameter( ParameterContext parameterContext,
-			ExtensionContext extensionContext ) {
-		return EntityManager.class.equals( parameterContext.getParameter().getType() );
-	}
-
-	@Override
-	public Object resolveParameter( ParameterContext parameterContext,
-			ExtensionContext extensionContext ) {
-		final Optional<String> persistenceUnitName = persistenceUnitName( extensionContext );
-		if ( persistenceUnitName.isPresent() ) {
-
-			final Store store = extensionContext
-					.getStore( Namespace.create( JPAExtension.class, persistenceUnitName.get() ) );
-
-			final EntityManagerFactory factory = (EntityManagerFactory) store.getOrComputeIfAbsent(
-					"emf",
-					key -> Persistence.createEntityManagerFactory( persistenceUnitName.get() ) );
-
-			final EntityManager entityManager = factory.createEntityManager();
-			store.put( "em", entityManager );
-			return entityManager;
-		} else {
-			throw new IllegalStateException( "PersistenceUnit is missing" );
-		}
-
-	}
-
-	@Override
-	public void afterTestExecution( final ExtensionContext context ) throws Exception {
+	public void beforeAll( final ExtensionContext context ) throws Exception {
 		final Optional<String> persistenceUnitName = persistenceUnitName( context );
+
 		if ( persistenceUnitName.isPresent() ) {
 			final Store store = context
 					.getStore( Namespace.create( JPAExtension.class, persistenceUnitName.get() ) );
 
-			( (EntityManager) store.get( "em" ) ).close();
+			store.getOrComputeIfAbsent( "emf",
+					key -> Persistence.createEntityManagerFactory( persistenceUnitName.get() ) );
 		}
 	}
 
-	private Optional<String> persistenceUnitName( final ExtensionContext context ) {
-		final Optional<PersistenceUnit> persistenceUnit = context.getTestMethod()
-				.map( method -> method.getAnnotation( PersistenceUnit.class ) );
-		return persistenceUnit.map( PersistenceUnit::unitName );
+	@Override
+	public void afterAll( final ExtensionContext context ) throws Exception {
+		final Optional<String> persistenceUnitName = persistenceUnitName( context );
+
+		if ( persistenceUnitName.isPresent() ) {
+			final Store store = context
+					.getStore( Namespace.create( JPAExtension.class, persistenceUnitName.get() ) );
+
+			Optional.ofNullable( store.get( "emf", EntityManagerFactory.class ) )
+					.ifPresent( EntityManagerFactory::close );
+		}
 	}
 
+	@Override
+	public boolean supportsParameter( final ParameterContext parameterContext,
+			final ExtensionContext extensionContext ) {
+		return EntityManager.class.equals( parameterContext.getParameter().getType() );
+	}
+
+	@Override
+	public Object resolveParameter( final ParameterContext parameterContext,
+			final ExtensionContext extensionContext ) {
+		System.out.println( "resolveParameter"+ extensionContext.toString() );
+		final Optional<String> persistenceUnitName = persistenceUnitName( extensionContext );
+
+		if ( persistenceUnitName.isPresent() ) {
+			final Store store = extensionContext
+					.getStore( Namespace.create( JPAExtension.class, persistenceUnitName.get() ) );
+			
+
+			return store.getOrComputeIfAbsent( "em",
+					key -> Optional.ofNullable( store.get( "emf", EntityManagerFactory.class ) )
+							.map( EntityManagerFactory::createEntityManager )
+							.orElse( null ) );
+		} else {
+			throw new ParameterResolutionException( "PersistenceUnit is missing" );
+		}
+	}
+
+	@Override
+	public void afterEach( final ExtensionContext context ) throws Exception {
+		System.out.println( "afterEach"+ context.toString() );
+		final Optional<String> persistenceUnitName = persistenceUnitName( context );
+
+		if ( persistenceUnitName.isPresent() ) {
+			final Store store = context
+					.getStore( Namespace.create( JPAExtension.class, persistenceUnitName.get() ) );
+
+			Optional.ofNullable( store.get( "em", EntityManager.class ) )
+					.ifPresent( EntityManager::close );
+			store.remove( "em", EntityManager.class );
+		}
+	}
+
+	Optional<String> persistenceUnitName( final ExtensionContext context ) {
+		final Optional<String> persistenceUnitName = context.getTestClass()
+				.map( method -> method.getAnnotation( PersistenceUnit.class ) )
+				.map( PersistenceUnit::unitName );
+		return persistenceUnitName;
+	}
 }
