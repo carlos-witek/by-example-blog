@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.carlos_witek.back_to_the_future_ii.impl.SettlementDefault;
+import org.carlos_witek.back_to_the_future_ii.impl.SettlementFaster;
 import org.carlos_witek.back_to_the_future_ii.model.ContestPrize;
 
 public class SettlementPerformanceTest {
@@ -18,7 +18,7 @@ public class SettlementPerformanceTest {
 
 	public static void main( String[] args ) {
 		final SettlementFixtures fixtures = performanceFixtures();
-		final Settlement settlement = new SettlementDefault();
+		final Settlement settlement = new SettlementFaster();
 
 		final List<ContestPrize> prizes;
 
